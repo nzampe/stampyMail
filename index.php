@@ -6,6 +6,8 @@ include_once('app/config/database/Connection.php');
 include_once('src/Controller/Controller.php');
 include_once('src/Repository/Repository.php');
 
+include_once('src/Security/User/Security.php');
+
 /* $connection = new Connection();
 $connection = $connection->getConnection(); */
 $userController = new UserController();
@@ -25,7 +27,6 @@ $request['dni'] = "0000";
 $today = new \DateTime('NOW');
 $request['updatedAt'] = $today->format('Y-m-d H:m:s');
 $result = $userController->edit($request);
-  var_dump($result);die;
 
 /* $result = json_decode($userController->new($request), true);
 if($result) {
