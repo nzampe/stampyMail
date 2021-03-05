@@ -55,6 +55,7 @@ class UserController extends Controller {
             if(count($errors) > 0) return $this->json($errors, 400);
             $user = new User(
                 null,
+                trim($request['id']),
                 trim($request['username']),
                 trim($request['password']),
                 trim($request['firstName']), 
@@ -64,13 +65,13 @@ class UserController extends Controller {
                 new \DateTime('NOW'), 
                 new \DateTime('NOW')
             );
-            $result = $this->repository->edit($user);
+            $result = $this->repository->edit($user, $request);
             if($result){
-                $message = "El usuario ha sido editado correctamente.";
+                $message = "El usuario {$request['id']} ha sido editado correctamente.";
                 $statusCode = 200;
             }
             else{
-                $message = "Ha ocurrido un error al editar el usuario.";
+                $message = "Ha ocurrido un error al editar el usuario {$request['id']}.";
                 $statusCode = 500;
             }
             // return $this->respond();

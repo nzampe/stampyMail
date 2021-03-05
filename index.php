@@ -15,16 +15,19 @@ $userController = new UserController();
 foreach ($result as $key => $value) {
   var_dump($value->getId());die;
 } */
-$result = $userController->delete(16);
+$request['id'] = 9;
+$request['username'] = "EDI3";
+$request['password'] = "asd";
+$request['firstName'] = "E2";
+$request['lastName'] = "ED22"; 
+$request['email'] = "e2dt@e2dit.com"; 
+$request['dni'] = "0000"; 
+$today = new \DateTime('NOW');
+$request['updatedAt'] = $today->format('Y-m-d H:m:s');
+$result = $userController->edit($request);
   var_dump($result);die;
 
-/* $request['username'] = "asd";
-$request['password'] = "asdas";
-$request['firstName'] = "123";
-$request['lastName'] = "true"; 
-$request['email'] = "asd@asd.com"; 
-$request['dni'] = "12312123"; 
-$result = json_decode($userController->new($request), true);
+/* $result = json_decode($userController->new($request), true);
 if($result) {
   var_dump($result['data']);die;
 } */
