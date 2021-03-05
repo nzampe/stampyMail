@@ -4,4 +4,4 @@ const DB_PASS = "";
 const DB_HOST = "localhost";
 const DB_PORT = "3306";
 const DB_NAME = "stampymail";
-const DATABASE_URL = "";
+const BASE_URL = "localhost/stampymail";

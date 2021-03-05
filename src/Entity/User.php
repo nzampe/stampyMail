@@ -11,9 +11,9 @@ class User {
     private $dni;
     private $createdAt;
     private $updatedAt;
-    private $dateTo;
 
     public function __construct(
+        $id,
         $username, 
         $password, 
         $firstName, 
@@ -21,10 +21,10 @@ class User {
         $email, 
         $dni, 
         $createdAt, 
-        $updatedAt,
-        $dateTo
+        $updatedAt
     )
     {
+        $this->id = $id;
         $this->username = $username;
         $this->password = $password;
         $this->firstName = $firstName;
@@ -33,7 +33,6 @@ class User {
         $this->dni = $dni;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
-        $this->dateTo = $dateTo;
     }
 
     /**
