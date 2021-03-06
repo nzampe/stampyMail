@@ -1,16 +1,18 @@
 <?php
 
-class UserRepository extends Repository{
-    
-    public function findAll() {
+include_once('./src/Entity/User.php');
+
+class UserRepository {
+
+    public static function findAll() {
         
         $today = new \DateTime("NOW");
         $today = $today->format('Y-m-d');
         try {
-            $this->getConnection()->beginTransaction();
+            Connection::getConnection()->beginTransaction();
             $sql = 'SELECT *
                     FROM user as u';
-            $sth = $this->getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $sth->execute();
             $result = $sth->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as $value) {
@@ -26,23 +28,23 @@ class UserRepository extends Repository{
                     $value['updatedAt']
                 );
             }
-            $this->getConnection()->commit();
+            Connection::getConnection()->commit();
             return $users;
         } catch (\Throwable $th) {
-            $this->getConnection()->rollback();
+            Connection::getConnection()->rollback();
             return false;
         }
     }
 
-    public function new($user) {
+    public static function create($user) {
         try {
-            $this->getConnection()->beginTransaction();
+            Connection::getConnection()->beginTransaction();
 
             $sql = "INSERT INTO user (username, password, firstName, lastName, email, dni, createdAt, updatedAt)
                     VALUES (:username, :password, :firstName, :lastName, :email, :dni, :createdAt, :updatedAt);";
 
-            $sth = $this->getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $this->getConnection()->commit();
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            Connection::getConnection()->commit();
             return $sth->execute(array(
                     ':username' => $user->getUsername(),
                     ':password' => $user->getPassword(),
@@ -54,14 +56,14 @@ class UserRepository extends Repository{
                     ':updatedAt' => $user->getUpdatedAt()->format('Y-m-d H:m:s'),
                 ));
         } catch (\Throwable $th) {
-            $this->getConnection()->rollback();
+            Connection::getConnection()->rollback();
             return false;
         }
     }
 
-    public function edit($user, $request) {
+    public static function update($user, $request) {
         try {
-            $this->getConnection()->beginTransaction();
+            Connection::getConnection()->beginTransaction();
 
             $sql = "UPDATE user
                     SET ";
@@ -75,44 +77,43 @@ class UserRepository extends Repository{
             }
             $sql = trim($sql, ',');
             $sql .= " WHERE id = ".$request['id'];
-            $sth = $this->getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $result = $sth->execute($dataValues);
-            $this->getConnection()->commit();
+            Connection::getConnection()->commit();
             return $result;
         } catch (\Throwable $th) {
-            var_dump($th);die;
-            $this->getConnection()->rollback();
+            Connection::getConnection()->rollback();
             return false;
         }
     }
 
-    public function delete($id) {
+    public static function delete($id) {
         try {
-            $this->getConnection()->beginTransaction();
+            Connection::getConnection()->beginTransaction();
             $sql = "DELETE FROM user
                     WHERE id = :id";
-            $sth = $this->getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             return $sth->execute(array(':id' => $id));
-            $this->getConnection()->commit();
+            Connection::getConnection()->commit();
         } catch (\Throwable $th) {
-            $this->getConnection()->rollback();
+            Connection::getConnection()->rollback();
             return false;
         }
     }
 
-    public function exists($username) {
+    public static function exists($username) {
         try {
-            $this->getConnection()->beginTransaction();
+            Connection::getConnection()->beginTransaction();
             $sql = "SELECT *
                     FROM user as u
                     WHERE u.username = :username";
 
-            $sth = $this->getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $sth->execute(array(':username' => $username));
-            $this->getConnection()->commit();
+            Connection::getConnection()->commit();
             return $sth->fetch(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
-            $this->getConnection()->rollback();
+            Connection::getConnection()->rollback();
             return false;
         }
     }

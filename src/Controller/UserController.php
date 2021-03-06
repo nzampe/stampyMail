@@ -1,14 +1,12 @@
 <?php
 
-class UserController extends Controller {
+include_once('./src/Repository/UserRepository.php');
 
-    public function __construct() {
-        $this->repository = new UserRepository();
-    }
+class UserController {
 
-    public function findAll() {
+    public static function index() {
         try {
-            $data = $this->repository->findAll();
+            $data = UserRepository::findAll();
             return $data;
             return $this->view->getView('Home', ['users' => $data]);
         } catch (\Throwable $th) {
@@ -16,10 +14,10 @@ class UserController extends Controller {
         }
     }
 
-    public function new($request) {
+    public static function add($request) {
         try {
             $errors = $this->validNewUser($request);
-            if(count($errors) > 0) return $this->json($errors, 400);
+            if(count($errors) > 0) return ResponseController::json($errors, 400);
             $user = new User(
                 null,
                 trim($request['username']),
@@ -31,7 +29,7 @@ class UserController extends Controller {
                 new \DateTime('NOW'), 
                 new \DateTime('NOW')
             );
-            $result = $this->repository->new($user);
+            $result = UserRepository::create($user);
             if($result){
                 $message = "El usuario ha sido guardado correctamente.";
                 $statusCode = 200;
@@ -44,15 +42,15 @@ class UserController extends Controller {
         } catch (\Throwable $th) {
             $message = "Ha ocurrido un error al guardar el usuario.";
             $statusCode = 500;
-            return $this->json($message, $statusCode);
+            return ResponseController::json($message, $statusCode);
         }
-        return $this->json($message, $statusCode);
+        return ResponseController::json($message, $statusCode);
     }
 
-    public function edit($request) {
+    public static function edit($request) {
         try {
-            $errors = $this->validUser($request);
-            if(count($errors) > 0) return $this->json($errors, 400);
+            $errors = self::validUser($request);
+            if(count($errors) > 0) return ResponseController::json($errors, 400);
             $user = new User(
                 null,
                 trim($request['id']),
@@ -65,7 +63,7 @@ class UserController extends Controller {
                 new \DateTime('NOW'), 
                 new \DateTime('NOW')
             );
-            $result = $this->repository->edit($user, $request);
+            $result = UserRepository::update($user, $request);
             if($result){
                 $message = "El usuario {$request['id']} ha sido editado correctamente.";
                 $statusCode = 200;
@@ -78,17 +76,17 @@ class UserController extends Controller {
         } catch (\Throwable $th) {
             $message = "Ha ocurrido un error al editar el usuario.";
             $statusCode = 500;
-            return $this->json($message, $statusCode);
+            return ResponseController::json($message, $statusCode);
         }
-        return $this->json($message, $statusCode);
+        return ResponseController::json($message, $statusCode);
     }
 
-    public function delete($id) {
+    public static function delete($id) {
         try{
             if(empty($id)){
-                return $this->json("El campo 'id' es requerido.", 400);
+                return ResponseController::json("El campo 'id' es requerido.", 400);
             }
-            $result = $this->repository->delete($id);
+            $result = UserRepository::delete($id);
             if($result){
                 $message = "El usuario {$id} se ha eliminado correctamente.";
                 $statusCode = 200;
@@ -101,17 +99,17 @@ class UserController extends Controller {
         } catch (\Throwable $th) {
             $message = "Ha ocurrido un error al momento de verificar si el usuario existe.";
             $statusCode = 500;
-            return $this->json($message, $statusCode);
+            return ResponseController::json($message, $statusCode);
         }
-        return $this->json($message, $statusCode);
+        return ResponseController::json($message, $statusCode);
     }
 
-    public function exists($username) {
+    public static function exists($username) {
         try {
             if(empty($username)){
-                return $this->json("El campo 'username' es requerido.", 400);
+                return ResponseController::json("El campo 'username' es requerido.", 400);
             }
-            $result = $this->repository->exists($username);
+            $result = UserRepository::exists($username);
             if($result){
                 $message = "El usuario {$username} ya se encuentra en el sistema.";
                 $statusCode = 200;
@@ -124,12 +122,12 @@ class UserController extends Controller {
         } catch (\Throwable $th) {
             $message = "Ha ocurrido un error al momento de verificar si el usuario existe.";
             $statusCode = 500;
-            return $this->json($message, $statusCode);
+            return ResponseController::json($message, $statusCode);
         }
-        return $this->json($message, $statusCode);
+        return ResponseController::json($message, $statusCode);
     }
 
-    public function validUser($request) {
+    public static function validUser($request) {
         $errors = [];
 
         if(empty($request['username'])){

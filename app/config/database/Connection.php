@@ -1,16 +1,18 @@
 <?php
 
+include_once('app/config/config.php');
+
 class Connection {
 
-    private $connection;
+    private static $connection;
 
-    function getConnection() {
+    public static function getConnection() {
       try {
-        if(!isset($this->connection)){
-          $this->connection = new PDO("mysql:host=".DB_HOST.";"."dbname=".DB_NAME, DB_USER, DB_PASS);
-          $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if(!isset(self::$connection)){
+          self::$connection = new PDO("mysql:host=".DB_HOST.";"."dbname=".DB_NAME, DB_USER, DB_PASS);
+          self::$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
-        return $this->connection;
+        return self::$connection;
       } catch (Exception $e) {
         print "¡Error!: " . $e->getMessage();
         die();

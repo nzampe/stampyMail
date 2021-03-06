@@ -1,8 +1,8 @@
 <?php
 
-class DefaultController extends Controller {
+class DefaultController {
 
-    public function home () {
+    public static function home () {
         if(isset($_SESSION['loggedIn'])){
             return View::getView('Home');
         }
