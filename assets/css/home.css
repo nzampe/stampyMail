@@ -1,0 +1,101 @@
+@font-face {
+  font-family: OpenSans-Regular;
+  src: url('../fonts/OpenSans/OpenSans-Regular.ttf'); 
+}
+
+* {
+	margin: 0px; 
+	padding: 0px; 
+}
+
+.btn-action {
+  padding: .375rem .75rem;
+  border: 1px solid #007bff;
+  border-radius: .25rem;
+  color: #007bff;
+}
+
+.btn-action:hover, .btn-action:active, .btn-action:focus {
+  color: #fff;
+  background-color: #007bff;
+}
+
+.btn-create {
+  margin-top: 50px;
+}
+
+.container-table {
+  min-height: 100vh;
+  background: #F2F2F2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.wrap-table {
+  width: 1100px;
+}
+
+table {
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+table thead tr {
+  height: 60px;
+  background: #4991E6;
+}
+table tbody tr {
+  height: 50px;
+}
+table td, table th {
+  text-align: left;
+}
+
+
+.table-head th{
+  font-family: OpenSans-Regular;
+  font-size: 18px;
+  color: #fff;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+tbody tr {
+  font-family: OpenSans-Regular;
+  font-size: 15px;
+  color: #808080;
+  line-height: 1.2;
+  font-weight: unset;
+}
+
+
+.column1 {
+  width: 260px;
+  padding-left: 40px;
+}
+
+.column2 {
+  width: 160px;
+}
+
+.column3 {
+  width: 100px;
+}
+
+.column4 {
+  width: 110px;
+  text-align: right;
+}
+
+.column5 {
+  width: 180px;
+  text-align: right;
+  padding-right: 40px;
+}

@@ -15,6 +15,7 @@ class UserRepository {
             $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $sth->execute();
             $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+            $users = [];
             foreach ($result as $value) {
                 $users[] = new User(
                     $value['id'],
@@ -69,6 +70,7 @@ class UserRepository {
                     SET ";
 
             $dataValues = [];
+
             foreach ($request as $key => $value) {
                 if($key !== 'id'){
                     $sql .= $key . " = ?,";
@@ -93,8 +95,45 @@ class UserRepository {
             $sql = "DELETE FROM user
                     WHERE id = :id";
             $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            return $sth->execute(array(':id' => $id));
+            $sth->execute(array(':id' => $id));
             Connection::getConnection()->commit();
+        } catch (\Throwable $th) {
+            var_dump($th);die;
+            Connection::getConnection()->rollback();
+            return false;
+        }
+    }
+
+    public static function login($username, $password) {
+        try {
+            Connection::getConnection()->beginTransaction();
+            $sql = "SELECT *
+                    FROM user as u
+                    WHERE u.username = :username AND u.password = :pass";
+
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth->execute(array(
+                ':username' => $username,
+                ':pass' => $password));
+            Connection::getConnection()->commit();
+            return $sth->fetch(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            Connection::getConnection()->rollback();
+            return false;
+        }
+    }
+    
+    public static function find($id) {
+        try {
+            Connection::getConnection()->beginTransaction();
+            $sql = "SELECT *
+                    FROM user as u
+                    WHERE u.id = :id";
+
+            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth->execute(array(':id' => $id));
+            Connection::getConnection()->commit();
+            return $sth->fetch(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
             Connection::getConnection()->rollback();
             return false;

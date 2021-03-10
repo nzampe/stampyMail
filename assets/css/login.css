@@ -1,0 +1,110 @@
+@font-face {
+  font-family: Ubuntu-Bold;
+  src: url('../fonts/ubuntu/Ubuntu-Bold.ttf'); 
+}
+
+
+/*//////////////////////////////////////////////////////////////////
+[ RESTYLE TAG ]*/
+
+* {
+	box-sizing: border-box;
+}
+
+/*---------------------------------------------*/
+
+
+/*---------------------------------------------*/
+input {
+	outline: none;
+	border: none;
+}
+
+/*---------------------------------------------*/
+button {
+	border: none;
+}
+
+button:hover {
+	cursor: pointer;
+}
+
+.container-login {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrap-login {
+  width: 500px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+
+/*==================================================================
+[ Form ]*/
+
+.login-form {
+  width: 100%;
+  position: relative;
+  padding-left: 55px;
+  padding-right: 55px;
+  padding-top: 178px;
+}
+
+.login-title {
+  font-family: Ubuntu-Bold;
+  font-size: 30px;
+  color: #fff;
+  text-align: center;
+
+  position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #4991E6;
+  padding-top: 50px;
+  padding-bottom: 39px;
+}
+
+/*------------------------------------------------------------------
+[ Input ]*/
+
+.input {
+  font-family: Ubuntu-Bold;
+  font-size: 15px;
+  width: 100%;
+  height: 55px;
+  background: #ebebeb;
+  border-radius: 27px;
+  padding: 0 35px 0 35px;
+}
+
+.input-username {
+  margin-bottom: 16px;
+}
+
+.container-login-btn {
+  padding-top: 13px;
+  padding-bottom: 23px;
+}
+
+.login-btn {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  background-color: #4991E6;
+  border-radius: 25px;
+
+  font-family: Ubuntu-Bold;
+  color: #fff;
+}
+
+p {
+  color: #e6352f;
+}

@@ -3,8 +3,9 @@
 class DefaultController {
 
     public static function home () {
-        if(isset($_SESSION['loggedIn'])){
-            return View::getView('Home');
+        session_start();
+        if(!empty($_SESSION['loggedIn'])){
+            return UserController::index();
         }
         return View::getView('Login');
     }

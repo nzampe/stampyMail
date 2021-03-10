@@ -4,29 +4,32 @@ class AuthController {
 
     public static function login() {
         if(empty($_POST['username']) || empty($_POST['password'])) {
-            return $this->json("Los campos 'username' y 'password' no pueden estar vacíos.", 400);
+            echo ResponseController::json("Los campos 'username' y 'password' no pueden estar vacíos.", 400);
+            die;
         }
+
         $username = $_POST['username'];
         $password = $_POST['password'];
 
-        $userController = new UserController();
-        $user = $userController->find($username, $password);
-        if(!$user) {
-            return $this->json("Usuario y/o contraseña incorrecta.", 401);
+        $result = UserController::login($username, $password);
+        if(empty($result)) {
+            echo ResponseController::json("Usuario y/o contraseña incorrecta.", 401);
+            die;
         }
-
+        session_start();
         $_SESSION['loggedIn'] = true;
-        $_SESSION['id'] = $user->getId();
-        $_SESSION['username'] = $user->getUsername();
+        $_SESSION['id'] = $result['id'];
+        $_SESSION['username'] = $result['username'];
 
-        return $this->json("Logueo exitoso", 200);
-
+        echo ResponseController::json("Logueo exitoso", 200);
+        die;
     }
 
     public static function logout() {
+        session_start();
         session_unset();
         session_destroy();
-        return View::getView('Login');
+        header("Location: /stampymail/default/home");
     }
 
 }
