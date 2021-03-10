@@ -16,7 +16,7 @@ class AuthController {
             echo ResponseController::json("Usuario y/o contraseña incorrecta.", 401);
             die;
         }
-        session_start();
+
         $_SESSION['loggedIn'] = true;
         $_SESSION['id'] = $result['id'];
         $_SESSION['username'] = $result['username'];
@@ -26,7 +26,6 @@ class AuthController {
     }
 
     public static function logout() {
-        session_start();
         session_unset();
         session_destroy();
         header("Location: /stampymail/default/home");

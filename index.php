@@ -5,10 +5,7 @@ include_once('views/View.php');
 
 include_once('src/Controller/ResponseController.php');
 
-// include_once('src/Security/Router.php');
-
 include_once('src/Controller/UserController.php');
 include_once('src/Controller/DefaultController.php');
-include_once('src/Router/Router.php');
 
-const urlBase = BASE_URL;
+include_once('src/Router/Router.php');

@@ -4,14 +4,6 @@ include_once('./src/Repository/UserRepository.php');
 
 class UserController {
 
-    public function __construct()
-    {
-        session_start();
-        if(!isset($_SESSION['loggedIn'])){
-            header("Location: /stampymail");
-        }
-    }
-
     public static function index() {
         try {
             $data = UserRepository::findAll();
@@ -22,7 +14,6 @@ class UserController {
     }
 
     public static function formUser($id = null) {
-        session_start();
         if(isset($id)){
             $user = UserRepository::find($id);
             return View::getView('FormUser', ['user' => $user]);
