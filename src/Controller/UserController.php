@@ -23,25 +23,27 @@ class UserController {
 
     public static function add() {
         try {
-            $errors = self::validUser();
-            if(count($errors) > 0) return ResponseController::json($errors, 400);
+            $request = array(
+                'username' => $_POST['username'] ?? null,
+                'password' => $_POST['password'] ? $_POST['password'] : null,
+                'firstName' => $_POST['firstName'] ?? null,
+                'lastName' => $_POST['lastName'] ?? null,
+                'email' => $_POST['email'] ?? null,
+                'dni' => $_POST['dni'] ?? null,
+                'createdAt' => (new \DateTime())->format('Y-m-d'),
+                'updatedAt' => (new \DateTime())->format('Y-m-d'),
+            );
+            $errors = self::validUser($request);
+            if(count($errors) > 0) {
+                echo ResponseController::json($errors, 400);
+                die;
+            }
             if(UserRepository::exists($_POST['username'])) {
                 $message = "Ese usuario ya existe en el sistema.";
                 $statusCode = 400;
                 echo ResponseController::json($message, $statusCode);die;
             }
-            $user = new User(
-                null,
-                trim($_POST['username']),
-                trim($_POST['password']),
-                trim($_POST['firstName']), 
-                trim($_POST['lastName']), 
-                trim($_POST['email']), 
-                trim($_POST['dni']), 
-                new \DateTime('NOW'), 
-                new \DateTime('NOW')
-            );
-            $result = UserRepository::create($user);
+            $result = UserRepository::create($request);
             if($result){
                 $message = "El usuario ha sido guardado correctamente.";
                 $statusCode = 200;
@@ -51,7 +53,6 @@ class UserController {
                 $statusCode = 500;
             }
         } catch (\Throwable $th) {
-            var_dump($th);die;
             $message = "Ha ocurrido un error al guardar el usuario.";
             $statusCode = 500;
             echo ResponseController::json($message, $statusCode);die;
@@ -61,8 +62,6 @@ class UserController {
 
     public static function edit() {
         try {
-            $errors = self::validUser();
-            
             $request = array(
                 'id' => $_POST['id'] ?? null,
                 'firstName' => $_POST['firstName'] ?? null,
@@ -73,6 +72,15 @@ class UserController {
                 'dni' => $_POST['dni'] ?? null,
                 'updatedAt' => (new \DateTime())->format('Y-m-d'),
             );
+
+            $errors = self::validUser($request);
+
+            $user = UserRepository::find($_POST['id']);
+            if(UserRepository::exists($_POST['username']) && $_POST['username'] !== $user['username']) {
+                $message = "Ese usuario ya existe en el sistema.";
+                $statusCode = 400;
+                echo ResponseController::json($message, $statusCode);die;
+            }
             if(count($errors) > 0) {
                 echo ResponseController::json($errors[0], 400);
                 die;
@@ -155,66 +163,50 @@ class UserController {
         return ResponseController::json($message, $statusCode);
     }
 
-    public static function validUser() {
+    public static function validUser($request) {
         $errors = [];
-
-        if(empty($_POST['username'])){
-            $errors[] = "El campo 'username' no puede ser vacío.";
+        foreach ($request as $key => $value) {
+            if(empty($request[$key])){
+                $errors[] = "El campo ${key} no puede ser vacío.";
+                return $errors;
+            }
         }
-        else if(!is_string($_POST['username'])){
+        if(!is_string($request['username'])){
             $errors[] = "El campo 'username' debe ser de tipo string.";
         }
-        else if(strlen($_POST['username']) > 20){
+        else if(strlen($request['username']) > 20){
             $errors[] = "El campo 'username' no debe superar los 20 carácteres.";
         }
-
-        if(empty($_POST['password'])){
-            $errors[] = "El campo 'password' no puede ser vacío.";
-        }
-        else if(!is_string($_POST['password'])){
+        if(!is_string($request['password'])){
             $errors[] = "El campo 'password' debe ser de tipo string.";
         }
-        else if(strlen($_POST['password']) > 20){
+        else if(strlen($request['password']) > 20){
             $errors[] = "El campo 'password' no debe superar los 20 carácteres.";
         }
-
-        if(empty($_POST['firstName'])){
-            $errors[] = "El campo 'firstName' no puede ser vacío.";
-        }
-        else if(!is_string($_POST['firstName'])){
+        if(!is_string($request['firstName'])){
             $errors[] = "El campo 'firstName' debe ser de tipo string.";
         }
-        else if(strlen($_POST['firstName']) > 50){
+        else if(strlen($request['firstName']) > 50){
             $errors[] = "El campo 'firstName' no debe superar los 50 carácteres.";
         }
-
-        if(empty($_POST['lastName'])){
-            $errors[] = "El campo 'lastName' no puede ser vacío.";
-        }
-        else if(!is_string($_POST['lastName'])){
+        if(!is_string($request['lastName'])){
             $errors[] = "El campo 'lastName' debe ser de tipo string.";
         }
-        else if(strlen($_POST['lastName']) > 50){
+        else if(strlen($request['lastName']) > 50){
             $errors[] = "El campo 'lastName' no debe superar los 50 carácteres.";
         }
 
-        if(empty($_POST['email'])){
-            $errors[] = "El campo 'email' no puede ser vacío.";
-        }
-        else if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        if(!filter_var($request['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = "La dirección de correo es inválida.";
         }
-        else if(strlen($_POST['email']) > 50){
+        else if(strlen($request['email']) > 50){
             $errors[] = "El campo 'email' no debe superar los 50 carácteres.";
         }
 
-        if(empty($_POST['dni'])){
-            $errors[] = "El campo 'dni' no puede ser vacío.";
-        }
-        else if(!is_numeric($_POST['dni'])){
+        if(!is_numeric($request['dni'])){
             $errors[] = "El campo 'dni' debe ser de tipo numérico.";
         }
-        else if(strlen($_POST['dni']) > 8){
+        else if(strlen($request['dni']) > 8){
             $errors[] = "El campo 'dni' no debe superar los 8 carácteres.";
         }
 

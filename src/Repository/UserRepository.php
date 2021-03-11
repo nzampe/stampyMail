@@ -15,20 +15,7 @@ class UserRepository {
             $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $sth->execute();
             $result = $sth->fetchAll(PDO::FETCH_ASSOC);
-            $users = [];
-            foreach ($result as $value) {
-                $users[] = new User(
-                    $value['id'],
-                    $value['username'],
-                    $value['password'],
-                    $value['firstName'], 
-                    $value['lastName'], 
-                    $value['email'], 
-                    $value['dni'], 
-                    $value['createdAt'], 
-                    $value['updatedAt']
-                );
-            }
+            $users = UserRepository::usersToObject($result);
             Connection::getConnection()->commit();
             return $users;
         } catch (\Throwable $th) {
@@ -37,26 +24,21 @@ class UserRepository {
         }
     }
 
-    public static function create($user) {
+    public static function create($request) {
         try {
             Connection::getConnection()->beginTransaction();
 
             $sql = "INSERT INTO user (username, password, firstName, lastName, email, dni, createdAt, updatedAt)
-                    VALUES (:username, :password, :firstName, :lastName, :email, :dni, :createdAt, :updatedAt);";
+                    VALUES (";
 
-            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $data = Repository::buildParamsUser($sql, $request, true);
+            $data['sql'] .= ")";
+
+            $result = Repository::excecuteQuery($data['sql'],$data['dataValues']);
             Connection::getConnection()->commit();
-            return $sth->execute(array(
-                    ':username' => $user->getUsername(),
-                    ':password' => $user->getPassword(),
-                    ':firstName' => $user->getFirstName(),
-                    ':lastName' => $user->getLastName(),
-                    ':email' => $user->getEmail(),
-                    ':dni' => $user->getDni(),
-                    ':createdAt' => $user->getCreatedAt()->format('Y-m-d H:m:s'),
-                    ':updatedAt' => $user->getUpdatedAt()->format('Y-m-d H:m:s'),
-                ));
+            return $result;
         } catch (\Throwable $th) {
+            var_dump($th);die;
             Connection::getConnection()->rollback();
             return false;
         }
@@ -65,22 +47,11 @@ class UserRepository {
     public static function update($user, $request) {
         try {
             Connection::getConnection()->beginTransaction();
-
             $sql = "UPDATE user
                     SET ";
-
-            $dataValues = [];
-
-            foreach ($request as $key => $value) {
-                if($key !== 'id'){
-                    $sql .= $key . " = ?,";
-                    $dataValues[] = $value;
-                }
-            }
-            $sql = trim($sql, ',');
-            $sql .= " WHERE id = ".$request['id'];
-            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $result = $sth->execute($dataValues);
+            $data = Repository::buildParamsUser($sql, $request, false);
+            $data['sql'] .= " WHERE id = ".$request['id'].";";
+            $result = Repository::excecuteQuery($data['sql'],$data['dataValues']);
             Connection::getConnection()->commit();
             return $result;
         } catch (\Throwable $th) {
@@ -93,12 +64,11 @@ class UserRepository {
         try {
             Connection::getConnection()->beginTransaction();
             $sql = "DELETE FROM user
-                    WHERE id = :id";
-            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $sth->execute(array(':id' => $id));
+                    WHERE ";
+            $data = Repository::buildParamsWhere($sql, ['id' => $id], false);
+            $result = Repository::excecuteQuery($data['sql'],$data['dataValues']);
             Connection::getConnection()->commit();
         } catch (\Throwable $th) {
-            var_dump($th);die;
             Connection::getConnection()->rollback();
             return false;
         }
@@ -108,13 +78,12 @@ class UserRepository {
         try {
             Connection::getConnection()->beginTransaction();
             $sql = "SELECT *
-                    FROM user as u
-                    WHERE u.username = :username AND u.password = :pass";
+                    FROM user
+                    WHERE ";
 
-            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $sth->execute(array(
-                ':username' => $username,
-                ':pass' => $password));
+            $data = Repository::buildParamsWhere($sql, ['username' => $username, 'password' => $password], false);
+            $sth = Connection::getConnection()->prepare($data['sql'], array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth->execute($data['dataValues']);
             Connection::getConnection()->commit();
             return $sth->fetch(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
@@ -127,11 +96,12 @@ class UserRepository {
         try {
             Connection::getConnection()->beginTransaction();
             $sql = "SELECT *
-                    FROM user as u
-                    WHERE u.id = :id";
+                    FROM user
+                    WHERE ";
 
-            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $sth->execute(array(':id' => $id));
+            $data = Repository::buildParamsWhere($sql, ['id' => $id], false);
+            $sth = Connection::getConnection()->prepare($data['sql'], array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth->execute($data['dataValues']);
             Connection::getConnection()->commit();
             return $sth->fetch(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
@@ -144,16 +114,35 @@ class UserRepository {
         try {
             Connection::getConnection()->beginTransaction();
             $sql = "SELECT *
-                    FROM user as u
-                    WHERE u.username = :username";
+                    FROM user
+                    WHERE ";
 
-            $sth = Connection::getConnection()->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-            $sth->execute(array(':username' => $username));
+            $data = Repository::buildParamsWhere($sql, ['username' => $username], false);
+            $sth = Connection::getConnection()->prepare($data['sql'], array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $sth->execute($data['dataValues']);
             Connection::getConnection()->commit();
             return $sth->fetch(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
             Connection::getConnection()->rollback();
             return false;
         }
+    }
+
+    public static function usersToObject($users) {
+        $result = [];
+        foreach ($users as $value) {
+            $result[] = new User(
+                $value['id'],
+                $value['username'],
+                $value['password'],
+                $value['firstName'], 
+                $value['lastName'], 
+                $value['email'], 
+                $value['dni'], 
+                $value['createdAt'], 
+                $value['updatedAt']
+            );
+        }
+        return $result;
     }
 }

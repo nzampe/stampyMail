@@ -42,7 +42,7 @@
             <input id="email" name="email" type="text" class="field" value="<?= $user ? $user['email'] : '' ?>" required> <br/>
             
             <p>DNI:</p>
-            <input id="dni" name="dni" type="text" class="field" value="<?= $user ? $user['dni'] : '' ?>" > <br/>
+            <input id="dni" name="dni" type="text" class="field" value="<?= $user ? $user['dni'] : '' ?>" required> <br/>
             
             <p id="error" name="error"></p>
 
