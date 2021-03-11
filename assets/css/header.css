@@ -1,26 +1,17 @@
 .header {
     overflow: hidden;
-    background-color: #4991E6;
     padding: 20px 10px;
+    background-color: #4991E6;
+}
+
+.logout {
+    float: right;
 }
 
 .header a {
     float: left;
-    font-family: Ubuntu-Bold;
-    color: #fff;
-    text-align: center;
     padding: 12px;
+    color: #fff;
+    font-size: 20px; 
     text-decoration: none;
-    font-size: 18px; 
-    line-height: 25px;
-    border-radius: 4px;
-  }
-  
-.header a.logo {
-    font-size: 25px;
-    font-weight: bold;
-  }
-
-.header-right {
-    float: right;
   }

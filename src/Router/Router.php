@@ -2,6 +2,7 @@
 
 session_start();
 
+// Divido la url para obtener el controller y la funcion.
 $url = !empty($_GET['url']) ? $_GET['url'] : 'default/home';
 $urlExploded = explode("/",$url);
 $nameController = ucfirst($urlExploded[0]).'Controller';

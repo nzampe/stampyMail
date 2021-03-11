@@ -2,7 +2,7 @@
     <div class="">
         <a href='/stampymail/default/home'>Inicio</a>
     </div>
-    <div class="header-right">
+    <div class="logout">
         <?php
         if ($_SESSION['loggedIn']) {
             echo ("<a>{$_SESSION['username']}</a>

@@ -1,26 +1,12 @@
-@font-face {
-  font-family: Ubuntu-Bold;
-  src: url('../fonts/ubuntu/Ubuntu-Bold.ttf'); 
-}
-
-
-/*//////////////////////////////////////////////////////////////////
-[ RESTYLE TAG ]*/
-
 * {
 	box-sizing: border-box;
 }
 
-/*---------------------------------------------*/
-
-
-/*---------------------------------------------*/
 input {
 	outline: none;
 	border: none;
 }
 
-/*---------------------------------------------*/
 button {
 	border: none;
 }
@@ -44,10 +30,6 @@ button:hover {
   box-shadow: 0 3px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
-
-/*==================================================================
-[ Form ]*/
-
 .login-form {
   width: 100%;
   position: relative;
@@ -70,9 +52,6 @@ button:hover {
   padding-top: 50px;
   padding-bottom: 39px;
 }
-
-/*------------------------------------------------------------------
-[ Input ]*/
 
 .input {
   font-family: Ubuntu-Bold;
