@@ -25,7 +25,7 @@ class UserController {
         try {
             $request = array(
                 'username' => $_POST['username'] ?? null,
-                'password' => $_POST['password'] ? $_POST['password'] : null,
+                'password' => $_POST['password'] ?: null,
                 'firstName' => $_POST['firstName'] ?? null,
                 'lastName' => $_POST['lastName'] ?? null,
                 'email' => $_POST['email'] ?? null,
@@ -67,15 +67,17 @@ class UserController {
                 'firstName' => $_POST['firstName'] ?? null,
                 'lastName' => $_POST['lastName'] ?? null,
                 'username' => $_POST['username'] ?? null,
-                'password' => $_POST['password'] ? $_POST['password'] : null,
+                'password' => $_POST['password'] ?: null,
                 'email' => $_POST['email'] ?? null,
                 'dni' => $_POST['dni'] ?? null,
                 'updatedAt' => (new \DateTime())->format('Y-m-d'),
             );
-
-            $errors = self::validUser($request);
-
             $user = UserRepository::find($_POST['id']);
+            if ($request['password'] && $request['password'] === $user['password']) {
+                unset($request['password']);
+            }
+
+            $errors = self::validUser($request, false);
             if(UserRepository::exists($_POST['username']) && $_POST['username'] !== $user['username']) {
                 $message = "Ese usuario ya existe en el sistema.";
                 $statusCode = 400;
@@ -85,18 +87,7 @@ class UserController {
                 echo ResponseController::json($errors[0], 400);
                 die;
             }
-            $user = new User(
-                null,
-                trim($request['username']),
-                trim($request['password']),
-                trim($request['firstName']), 
-                trim($request['lastName']), 
-                trim($request['email']), 
-                trim($request['dni']), 
-                new \DateTime('NOW'), 
-                new \DateTime('NOW')
-            );
-            $result = UserRepository::update($user, $request);
+            $result = UserRepository::update($request);
             if($result){
                 $message = "El usuario {$request['id']} ha sido editado correctamente.";
                 $statusCode = 200;
@@ -163,7 +154,7 @@ class UserController {
         return ResponseController::json($message, $statusCode);
     }
 
-    public static function validUser($request) {
+    public static function validUser($request, $requiresPassword = true) {
         $errors = [];
         foreach ($request as $key => $value) {
             if(empty($request[$key])){
@@ -177,12 +168,15 @@ class UserController {
         else if(strlen($request['username']) > 20){
             $errors[] = "El campo 'username' no debe superar los 20 carácteres.";
         }
-        if(!is_string($request['password'])){
-            $errors[] = "El campo 'password' debe ser de tipo string.";
+        if ($requiresPassword || isset($request['password'])) {
+            if(!is_string($request['password'])){
+                $errors[] = "El campo 'password' debe ser de tipo string.";
+            }
+            else if(strlen($request['password']) > 20){
+                $errors[] = "El campo 'password' no debe superar los 20 carácteres.";
+            }
         }
-        else if(strlen($request['password']) > 20){
-            $errors[] = "El campo 'password' no debe superar los 20 carácteres.";
-        }
+
         if(!is_string($request['firstName'])){
             $errors[] = "El campo 'firstName' debe ser de tipo string.";
         }

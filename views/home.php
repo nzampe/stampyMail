@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="/stampymail/assets/css/header.css">
-	<link rel="stylesheet" type="text/css" href="/stampymail/assets/css/home.css">
+	<link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>/assets/css/header.css">
+	<link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>/assets/css/home.css">
     <title>StampyMail</title>
 </head>
 <body>
@@ -34,7 +34,7 @@
                                 echo '<td class="column3">'. $value->getDni() . '</td>';
                                 echo '<td class="column4">'. $value->getEmail() . '</td>';
                                 echo '<td class="column5">
-								<a href="/stampymail/user/formUser/'.$value->getId().'"><button class="btn-action">Modificar</button></a>';
+								<a href="'.BASE_URL.'/user/formUser/'.$value->getId().'"><button class="btn-action">Modificar</button></a>';
 								if($_SESSION['id'] !== $value->getId()){
 									echo '<button onClick="deleteUser('.$value->getId().',event)" class="btn-action">Eliminar</button></td>';
 								}
@@ -58,5 +58,5 @@
 		</div>
 	</div>
 </body>
-<script src="/stampymail/assets/js/user.js"></script>
+<script src="<?=BASE_URL?>/assets/js/user.js"></script>
 </html>

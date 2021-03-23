@@ -5,14 +5,15 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/stampymail/assets/css/login.css">
-        <script src="/stampymail/assets/js/auth.js"></script>
+        <link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>/assets/css/login.css">
+        <script src="<?= BASE_URL ?>/assets/js/auth.js"></script>
     </head>
     <body>
+    <?php include_once('./views/components/config.php'); ?>
         <div>
             <div class="container-login">
                 <div class="wrap-login">
-                    <form id="login-form" class="login-form" onsubmit="login(event);" method="post">
+                    <form id="login-form" class="login-form" onsubmit='login(event);' method="post">
                         <span class="login-title">
                             StampyMail
                         </span>

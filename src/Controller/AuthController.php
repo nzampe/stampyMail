@@ -28,7 +28,7 @@ class AuthController {
     public static function logout() {
         session_unset();
         session_destroy();
-        header("Location: /stampymail/default/home");
+        header('Location: '.BASE_URL.'/default/home');
     }
 
 }

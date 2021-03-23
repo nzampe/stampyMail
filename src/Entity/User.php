@@ -26,7 +26,7 @@ class User {
     {
         $this->id = $id;
         $this->username = $username;
-        $this->password = $password;
+        $this->setPassword($password);
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
@@ -120,37 +120,39 @@ class User {
         $this->username = $username;
     }
 
-    public function setPassword()
+    public function setPassword(string $password): self
     {
-        $this->password = $password;
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
+
+        return $this;
     }
 
-    public function setFirstName()
+    public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
     }
 
-    public function setlastName()
+    public function setlastName($lastName)
     {
         $this->lastName = $lastName;
     }
 
-    public function setEmail()
+    public function setEmail($email)
     {
         $this->email = $email;
     }
 
-    public function setDni()
+    public function setDni($dni)
     {
         $this->dni = $dni;
     }
 
-    public function setCreatedAt()
+    public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
     }
 
-    public function setUpdatedAt()
+    public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
     }
