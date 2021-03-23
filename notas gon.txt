@@ -1,0 +1,3 @@
+rutas relativas a la raíz en home.php /stampymail/...
+passwords sin cifrar en la BD???
+estaría bien que el repository devolviera users en lugar de arrays.

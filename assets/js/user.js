@@ -2,7 +2,7 @@ function deleteUser(id, e) {
     if (confirm('Está seguro de que quiere eliminar este usuario?')) {
         let formData = new FormData();
         formData.append('id', id)
-        fetch(`/stampymail/user/delete`,{
+        fetch(App.config.base_url+`/user/delete`,{
             method:'POST',
             body: formData
         })
@@ -25,7 +25,7 @@ function actionUser(e) {
     let form = document.getElementById('user-form');
     let formData = new FormData(form);
     
-    let url = '/stampymail/user/'
+    let url = App.config.base_url+'/user/'
     
     if(formData.get('id')) {
         url += 'edit' 
@@ -47,7 +47,7 @@ function actionUser(e) {
         console.log(data)
         if(data.statusCode === 200) {
             alert(data.data);
-            window.location.href='/stampymail/default/home'
+            window.location.href=App.config.base_url+'/default/home'
         }
         else {
             document.getElementById('error').innerText = data.data;
@@ -57,5 +57,5 @@ function actionUser(e) {
 }
 
 function newUser() {
-    window.location.href='/stampymail/user/formUser'
+    window.location.href=App.config.base_url+'/user/formUser'
 }

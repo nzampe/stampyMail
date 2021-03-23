@@ -1,9 +1,9 @@
-function login(e) {
+function login(e, base_url) {
     e.preventDefault();
     var formData = new FormData();
     formData.append('username', document.getElementById('username').value)
     formData.append('password', document.getElementById('password').value)
-    fetch(`/stampymail/auth/login`,{
+    fetch(App.config.base_url+`/auth/login`,{
         method:'POST',
         body: formData
     })
@@ -13,7 +13,7 @@ function login(e) {
         .then(function(response){
             let data = JSON.parse(response);
             if(data.statusCode === 200) {
-                window.location.href='/stampymail/default/home'
+                window.location.href=App.config.base_url+'/default/home'
             }
             else {
                 document.getElementById('error').innerText = data.data;

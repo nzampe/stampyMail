@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="/stampymail/assets/css/header.css">
-	<link rel="stylesheet" type="text/css" href="/stampymail/assets/css/formUser.css">
+	<link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>/assets/css/header.css">
+	<link rel="stylesheet" type="text/css" href="<?= BASE_URL ?>/assets/css/formUser.css">
     <title>Formulario de usuario</title>
 </head>
 <body>
@@ -52,5 +52,5 @@
         </form>
     </div>
 </body>
-<script src="/stampymail/assets/js/user.js"></script>
+<script src="<?=BASE_URL?>/assets/js/user.js"></script>
 </html>

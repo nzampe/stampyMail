@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
-  `password` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `password` varchar(180) COLLATE utf8_spanish_ci NOT NULL,
   `firstName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `lastName` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `email` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
@@ -44,8 +44,9 @@ CREATE TABLE `user` (
 -- Volcado de datos para la tabla `user`
 --
 
+-- User admin:admin
 INSERT INTO `user` (`id`, `username`, `password`, `firstName`, `lastName`, `email`, `dni`, `createdAt`, `updatedAt`) VALUES
-(20, 'admin', 'admin', 'Admin', 'Admin', 'admin@gmail.com', '38795662', '2021-03-10 00:00:00', '2021-03-11 00:00:00');
+(20, 'admin', '$2y$10$ZAEA0cuARGVKh2SQYcLHDuXarzxl4z2.Z824M/0P/vgv1F1kvmeOi', 'Admin', 'Admin', 'admin@gmail.com', '38795662', '2021-03-10 00:00:00', '2021-03-11 00:00:00');
 
 --
 -- Índices para tablas volcadas

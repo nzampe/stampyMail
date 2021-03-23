@@ -26,6 +26,7 @@ class UserRepository {
 
     public static function create($request) {
         try {
+            self::hashPassword($request);
             Connection::getConnection()->beginTransaction();
 
             $sql = "INSERT INTO user (username, password, firstName, lastName, email, dni, createdAt, updatedAt)
@@ -44,8 +45,20 @@ class UserRepository {
         }
     }
 
-    public static function update($user, $request) {
+    /**
+     * @param array $request
+     */
+    private static function hashPassword(array &$request): void
+    {
+        if (isset($request['password'])) {
+            $request['password'] = password_hash($request['password'], PASSWORD_DEFAULT);
+        }
+    }
+
+    public static function update($request): bool
+    {
         try {
+            self::hashPassword($request);
             Connection::getConnection()->beginTransaction();
             $sql = "UPDATE user
                     SET ";
@@ -74,21 +87,28 @@ class UserRepository {
         }
     }
 
-    public static function login($username, $password) {
+    public static function login($username, $password): array
+    {
         try {
             Connection::getConnection()->beginTransaction();
             $sql = "SELECT *
                     FROM user
                     WHERE ";
 
-            $data = Repository::buildParamsWhere($sql, ['username' => $username, 'password' => $password], false);
+            $data = Repository::buildParamsWhere($sql, ['username' => $username], false);
             $sth = Connection::getConnection()->prepare($data['sql'], array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
             $sth->execute($data['dataValues']);
             Connection::getConnection()->commit();
-            return $sth->fetch(PDO::FETCH_ASSOC);
+            $userData = $sth->fetch(PDO::FETCH_ASSOC);
+            if ($userData && password_verify($password, $userData['password'])) {
+                return $userData;
+            }
+
+            return [];
         } catch (\Throwable $th) {
             Connection::getConnection()->rollback();
-            return false;
+
+            return [];
         }
     }
     
